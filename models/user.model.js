@@ -26,9 +26,7 @@ const userSchema = new mongoose.Schema(
     username: {
       type: String,
     },
-    profileUrl: {
-      type: String,
-    },
+  
     isProfileComplete: {
       type: Boolean,
       default: false,
