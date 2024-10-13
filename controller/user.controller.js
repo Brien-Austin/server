@@ -12,7 +12,8 @@ async function userProfileHandler(req,res,next){
             user : {
                 email : user?.email,
                 courses : user?.enrolledCourses,
-                isProfileComplete : user?.isProfileComplete
+                isProfileComplete : user?.isProfileComplete,
+                profileUrl : user?.profileUrl
             }
         })
     } catch (error) {
