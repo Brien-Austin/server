@@ -14,7 +14,8 @@ const userSchema = new mongoose.Schema(
     },
     profileUrl : {
       type : String,
-      default : "https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg?size=626&ext=jpg"
+      default : "https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg?size=626&ext=jpg",
+      required : true
     },
     contactNumber: {
       type: String,
