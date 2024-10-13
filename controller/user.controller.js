@@ -10,7 +10,9 @@ async function userProfileHandler(req,res,next){
             success:true,
             message : "User profile",
             user : {
-                email : user?.email
+                email : user?.email,
+                courses : user?.enrolledCourses,
+                isProfileComplete : user?.isProfileComplete
             }
         })
     } catch (error) {
