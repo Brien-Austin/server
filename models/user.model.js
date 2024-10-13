@@ -7,9 +7,14 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+
     password: {
       type: String,
       required: true,
+    },
+    profileUrl : {
+      type : String,
+      default : "https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg?size=626&ext=jpg"
     },
     contactNumber: {
       type: String,
