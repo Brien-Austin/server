@@ -42,7 +42,7 @@ const chapterSchema = new mongoose.Schema({
   qa : [
     {
         type : mongoose.Schema.Types.ObjectId,
-        required : true,
+        required : false,
         ref : 'Questions'
       }
   ]
