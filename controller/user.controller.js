@@ -11,6 +11,7 @@ async function userProfileHandler(req,res,next){
             message : "User profile",
             user : {
                 email : user?.email,
+                role : user?.role,
                 courses : user?.enrolledCourses,
                 isProfileComplete : user?.isProfileComplete,
                 profileUrl : user?.profileUrl
