@@ -14,7 +14,7 @@ const courseSchema = new mongoose.Schema({
         type : String,
 
     },
-   tags : [
+   tags : 
     {
         domain : {
             type : String,
@@ -25,12 +25,13 @@ const courseSchema = new mongoose.Schema({
             }
         ]
     }
-   ],
+   ,
 
    chapters : [
     {
         type : mongoose.Schema.Types.ObjectId,
-        ref : 'Chapter'
+        ref : 'Chapter',
+        required : false
     }
    ]
 

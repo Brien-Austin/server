@@ -4,6 +4,7 @@ const { connectDB } = require("./config/db");
 const cors = require("cors");
 const authRouter = require("./routes/auth.route");
 const userRouter= require("./routes/user.route");
+const adminRouter = require("./routes/admin.route");
 const errorHandler = require("./middlewares/errorHandler");
 const ErrorHandler = require("./utils/error");
 const { verifyToken } = require("./utils/jwt");
@@ -23,6 +24,10 @@ app.use("/api/v1/auth/user", authRouter);
 
 //user data
 app.use("/api/v1/user",verifyToken,userRouter)
+
+// admin 
+
+app.use("/api/v1/admin",adminRouter)
 
 
 
