@@ -100,7 +100,7 @@ try {
     
 } catch (error) {
     console.log('[SINGLE_COURSE_FETCH_ERROR]',error)
-    return res.status(500),json({
+    return res.status(500).json({
         success: false,
         message : "Internal Server Error"
     })
