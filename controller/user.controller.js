@@ -33,7 +33,7 @@ async function userProfileHandler(req, res, next) {
 async function fetchInstructors(req, res, next) {
     try {
 
-        const instructors = await Instructor.find().populate({
+        const instructors = await Instructor.find().select("email canCreateCourse profileUrl").populate({
             path : 'courses',
             select : "title chapters"
         })
