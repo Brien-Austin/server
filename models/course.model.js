@@ -6,10 +6,36 @@ const courseSchema = new mongoose.Schema({
         type : String,
         required : true,
     },
+    instructor: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Instructor",  
+        required: true,
+      },
     imageurl : {
         type : String,
 
     },
+    price : {
+        type : Number,
+        required : false
+
+    },
+
+    isFree : {
+        type : Boolean,
+        default : true
+
+    },
+
+    isYoutubeCourse : {
+        type : Boolean,
+        default : false 
+    },
+
+    studentsEnrolled: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Users",  
+      }],
     description : {
         type : String,
 
@@ -23,14 +49,15 @@ const courseSchema = new mongoose.Schema({
             {
                 name : String
             }
-        ]
+        ],
+        
     }
    ,
 
    chapters : [
     {
         type : mongoose.Schema.Types.ObjectId,
-        ref : 'Chapter',
+        ref : 'Chapters',
         required : false
     }
    ]

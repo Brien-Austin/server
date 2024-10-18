@@ -23,16 +23,27 @@ const questionSchema = new mongoose.Schema({
 })
 
 const chapterSchema = new mongoose.Schema({
+  index : {
+    type : Number,
+    unique : true,
+
+  },
   title: {
     type: String,
     required: true,
   },
   imageurl: {
     type: String,
+    required : false
   },
   description: {
     type: String,
     required: true,
+  },
+  courseId : {
+    type : mongoose.Schema.Types.ObjectId,
+    ref : 'Courses'
+
   },
 
   videoUrl: {

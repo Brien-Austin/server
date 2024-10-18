@@ -12,17 +12,17 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    role : {
+    role: {
       type: String,
-      enum : ['user', 'admin', 'instructor'],
-      default : 'user',
-      required : true
-    }
-    ,
-    profileUrl : {
-      type : String,
-      default : "https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg?size=626&ext=jpg",
-      required : true
+      enum: ["user", "admin", "instructor"],
+      default: "user",
+      required: true,
+    },
+    profileUrl: {
+      type: String,
+      default:
+        "https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg?size=626&ext=jpg",
+      required: true,
     },
     contactNumber: {
       type: String,
@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema(
     username: {
       type: String,
     },
-  
+
     isProfileComplete: {
       type: Boolean,
       default: false,
@@ -58,6 +58,8 @@ const userSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+
 
 const Users = mongoose.model("Users", userSchema) || mongoose.models.Users;
 
