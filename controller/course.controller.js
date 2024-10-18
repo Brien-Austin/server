@@ -79,6 +79,36 @@ async function getCourses(req,res) {
 
 }
 
+async function getCourseById(req,res){
+    const {courseId} = req.params
+try {
+    const course = await Courses.findById(courseId).populate({
+        path : "chapters",
+        select : "title description imageurl _id"
+    })
+    if(!course){
+        return res.status(404).json({
+            success : false,
+            message : 'Course not found'
+        })
+    }
+    return res.status(200).json({
+        success : true,
+        message : "Course found",
+        course : course
+    })
+    
+} catch (error) {
+    console.log('[SINGLE_COURSE_FETCH_ERROR]',error)
+    return res.status(500),json({
+        success: false,
+        message : "Internal Server Error"
+    })
+    
+}
+    
+}
+
 
 
 
@@ -98,4 +128,4 @@ async function imageUploadHandler (req,res) {
 
 
 
-module.exports = {createCourseHandler,imageUploadHandler,getCourses}
+module.exports = {createCourseHandler,imageUploadHandler,getCourses,getCourseById}

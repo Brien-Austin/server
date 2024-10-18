@@ -55,4 +55,8 @@ async function fetchInstructors(req, res, next) {
     }
 }
 
+async function followInstructor(req, res) {
+    
+}
+
 module.exports = { userProfileHandler ,fetchInstructors};
