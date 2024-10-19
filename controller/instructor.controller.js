@@ -26,7 +26,7 @@ async function instructorRegisterHandler(req, res) {
     }
 
     const hashedPassword = await hashValue(password);
-    const user = new Instructor({
+    const instructor = new Instructor({
       email,
       password: hashedPassword,
     });
@@ -233,9 +233,40 @@ async function createQuestionAnswers(req,res) {
 
 }
 
+
+// instructor profile
+async function instructorProfile(req,res) {
+  try {
+    const instructor = await Instructor.findOne({ email: req.instructor.email });
+    if (!instructor) {
+      return res.status(404).json({
+        success: false,
+        message: "Instructor not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Instructor profile",
+      instructor: {
+        email: instructor?.email,
+        role: instructor?.role,
+        courses: instructor?.enrolledCourses,
+        isProfileComplete: instructor?.isProfileComplete,
+        profileUrl: instructor?.profileUrl,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+}
 module.exports = {
   instructorRegisterHandler,
   InstructorSignInHandler,
   createChapter,
   createMultipleChapters,
+  instructorProfile
 };
