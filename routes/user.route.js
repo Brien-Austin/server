@@ -1,5 +1,5 @@
 const express = require("express");
-const { userProfileHandler, fetchInstructors } = require("../controller/user.controller");
+const { userProfileHandler, fetchInstructors, enrollFreeCourse } = require("../controller/user.controller");
 const { verifyToken } = require("../utils/jwt");
 const { getCourses, getCourseById } = require("../controller/course.controller");
 
@@ -10,6 +10,7 @@ router.get("/profile",userProfileHandler)
 router.get("/courses",getCourses)
 router.get("/course/:courseId",getCourseById)
 router.get("/instructors",fetchInstructors)
+router.post("/enroll/:id",enrollFreeCourse)
 
 
 

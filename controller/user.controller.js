@@ -1,3 +1,4 @@
+const Courses = require("../models/course.model");
 const Instructor = require("../models/instructor.model");
 const Users = require("../models/user.model");
 
@@ -59,4 +60,27 @@ async function followInstructor(req, res) {
     
 }
 
-module.exports = { userProfileHandler ,fetchInstructors};
+async function enrollFreeCourse(req,res) {
+  try {
+    const {id} = req.params
+
+
+    return res.status(200).json({
+      success: true,
+      message : "User enrolled successfully",
+      id : id
+    })
+
+
+    
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({
+      message : "Internal Server Error",
+    })
+    
+  }
+
+}
+
+module.exports = { userProfileHandler ,fetchInstructors,enrollFreeCourse};
