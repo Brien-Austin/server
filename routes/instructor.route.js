@@ -1,6 +1,6 @@
 const express = require("express");
 
-const { instructorRegisterHandler, InstructorSignInHandler, createChapter, createMultipleChapters, createMultiChapter, instructorProfile } = require("../controller/instructor.controller");
+const { instructorRegisterHandler, InstructorSignInHandler, createChapter, createMultipleChapters, createMultiChapter, instructorProfile, publishCourse } = require("../controller/instructor.controller");
 const {  instructorRefreshTokenHandler } = require("../utils/jwt");
 const { createCourseHandler } = require("../controller/course.controller");
 const router = express.Router();
@@ -16,5 +16,7 @@ router.get("/profile",instructorProfile)
 router.post('/create-course',createCourseHandler)
 router.post('/create-chapter/:instructorId/:courseId',createChapter)
 router.post('/create-chapters/:instructorId/:courseId',createMultipleChapters)
+router.post('/publish-course/:instructorId/:courseId',publishCourse)
+
 
 module.exports = router;

@@ -6,7 +6,6 @@ const { compareValue, hashValue } = require("../utils/bcrypt");
 const { generateAcessToken, generateRefreshToken } = require("../utils/jwt");
 const mongoose = require("mongoose");
 
-
 // Authentication
 async function instructorRegisterHandler(req, res) {
   const { email, password } = req.body;
@@ -86,8 +85,6 @@ async function InstructorSignInHandler(req, res) {
     });
   }
 }
-
-
 // Chapter creation
 async function createChapter(req, res) {
   const courseId = req.params.courseId;
@@ -144,7 +141,6 @@ async function createChapter(req, res) {
     });
   }
 }
-
 // multiChapter creation
 async function createMultipleChapters(req, res) {
   const { courseId, instructorId } = req.params;
@@ -227,17 +223,14 @@ async function createMultipleChapters(req, res) {
     });
   }
 }
-
-// create q and a 
-async function createQuestionAnswers(req,res) {
-
-}
-
-
+// create q and a
+async function createQuestionAnswers(req, res) {}
 // instructor profile
-async function instructorProfile(req,res) {
+async function instructorProfile(req, res) {
   try {
-    const instructor = await Instructor.findOne({ email: req.instructor.email });
+    const instructor = await Instructor.findOne({
+      email: req.instructor.email,
+    });
     if (!instructor) {
       return res.status(404).json({
         success: false,
@@ -263,10 +256,37 @@ async function instructorProfile(req,res) {
     });
   }
 }
+// publish course
+async function publishCourse(req, res) {
+  try {
+    const { courseId, instructorId } = req.params;
+    const currentCourse = await Courses.findById(courseId)
+    const currentStatus =  currentCourse.isPublished
+    const course = await Courses.findByIdAndUpdate(courseId, {
+      isPublished : !currentStatus
+    });
+    await course.save()
+    const message = currentStatus ? "Course published" : "Course unpublished !"
+  
+
+    return res.status(200).json({
+      success: true,
+      message: message
+    })
+    
+  } catch (error) {
+    console.log("[PUBLISH_COURSE]", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+}
 module.exports = {
   instructorRegisterHandler,
   InstructorSignInHandler,
   createChapter,
   createMultipleChapters,
-  instructorProfile
+  instructorProfile,
+  publishCourse
 };

@@ -53,7 +53,7 @@ async function signInHandler(req, res) {
     if (!user) {
       return res.status(400).json({
         success: false,
-        message: "Invalid Email or Password",
+        message: "User doesnt exist",
       });
     }
 
