@@ -1,4 +1,4 @@
-const { Chapters } = require("../models/chapter.model");
+const { Chapters, Questions } = require("../models/chapter.model");
 const Courses = require("../models/course.model");
 const Instructor = require("../models/instructor.model");
 const { loginUser } = require("../services/auth.service");
@@ -224,7 +224,48 @@ async function createMultipleChapters(req, res) {
   }
 }
 // create q and a
-async function createQuestionAnswers(req, res) {}
+async function createQuestionAnswers(req, res) {
+  try {
+    const {question, options } = req.body;
+  const {chapterId,courseId} = req.params;
+  const userId = req.instructor.id
+  if(!chapterId || !courseId) {
+    return res.status(404).json({
+      success: false,
+      message : "CoureseId and ChapterId are required"
+    })
+  }
+
+  const chapter = await Chapters.findById(chapterId)
+  const qa = new Questions({
+    question ,
+    options ,
+    
+
+  })
+
+  chapter.qa.push(qa._id)
+  await qa.save()
+  await chapter.save()
+
+  return res.status(200).json({
+    success: true,
+    message : 'QA Created',
+    data : {
+      chapterId , userId , courseId
+    }
+  })
+    
+  } catch (error) {
+    console.log('[QA_CERATION_ERROR]', error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    })
+    
+  }
+
+}
 // instructor profile
 async function instructorProfile(req, res) {
   try {
@@ -282,11 +323,14 @@ async function publishCourse(req, res) {
     });
   }
 }
+
+// 
 module.exports = {
   instructorRegisterHandler,
   InstructorSignInHandler,
   createChapter,
   createMultipleChapters,
   instructorProfile,
-  publishCourse
+  publishCourse,
+  createQuestionAnswers
 };

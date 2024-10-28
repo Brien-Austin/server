@@ -53,13 +53,23 @@ const userSchema = new mongoose.Schema(
         },
       },
     ],
+
+    isAccountDeactivated : {
+      type : Boolean,
+      default : false,
+
+    },
+    messages : [
+      {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : 'Messages'
+      }
+    ]
   },
   {
     timestamps: true,
   }
 );
-
-
 
 const Users = mongoose.model("Users", userSchema) || mongoose.models.Users;
 

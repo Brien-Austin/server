@@ -17,7 +17,7 @@ const questionSchema = new mongoose.Schema({
     options : [optionSchema],
     answer : {
         type : mongoose.Schema.Types.ObjectId,
-        required : true,
+        required : false,
         ref : 'Options'
     }
 })

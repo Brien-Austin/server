@@ -16,11 +16,14 @@ async function userProfileHandler(req, res, next) {
       success: true,
       message: "User profile",
       user: {
+        username: user?.username,
         email: user?.email,
-        role: user?.role,
-        courses: user?.enrolledCourses,
-        isProfileComplete: user?.isProfileComplete,
+        age: user?.age,
+        contactNumber: user?.contactNumber,
         profileUrl: user?.profileUrl,
+        isProfileComplete: user?.isProfileComplete,
+
+        courses: user?.enrolledCourses,
       },
     });
   } catch (error) {
@@ -61,40 +64,37 @@ async function enrollFreeCourse(req, res) {
     const { id } = req.params;
     const userId = req.user.id;
 
-    const courseToBeEnrolled = await Courses.findById(id)
-    if(!courseToBeEnrolled.isFree) {
+    const courseToBeEnrolled = await Courses.findById(id);
+    if (!courseToBeEnrolled.isFree) {
       return res.status(404).json({
         success: false,
-        message : "Free courses can be only enrolled"
-      })
+        message: "Free courses can be only enrolled",
+      });
     }
 
-    const userToBeEnrolled = await Users.findById(userId)
-    const alreadyEnrolled = userToBeEnrolled.enrolledCourses.some(course => String(course.course) === String(id))
-    if(alreadyEnrolled) {
+    const userToBeEnrolled = await Users.findById(userId);
+    const alreadyEnrolled = userToBeEnrolled.enrolledCourses.some(
+      (course) => String(course.course) === String(id)
+    );
+    if (alreadyEnrolled) {
       return res.status(400).json({
         success: false,
-        message : "User already enrolled in the course"
-      })
-
+        message: "User already enrolled in the course",
+      });
     }
 
     userToBeEnrolled.enrolledCourses.push({
-      course : id,
-      enrolledDate : new Date()
-    })
+      course: id,
+      enrolledDate: new Date(),
+    });
 
-    await userToBeEnrolled.save()
-
-    
-
+    await userToBeEnrolled.save();
 
     return res.status(200).json({
       success: true,
       message: "User enrolled successfully",
       id: id,
-      userToBeEnrolled
-
+      userToBeEnrolled,
     });
   } catch (error) {
     console.log(error);
@@ -104,5 +104,60 @@ async function enrollFreeCourse(req, res) {
   }
 }
 
+//my-courses
+async function getMyCourses(req, res) {
+  try {
+    const userId = req.user._id;
+    const user = await Users.findById(userId).populate({
+      path: "enrolledCourses.course",
+    });
 
-module.exports = { userProfileHandler, fetchInstructors, enrollFreeCourse };
+    return res.status(200).json({
+      success: true,
+      message: "Courses fetched successfully",
+      courses: user.enrolledCourses,
+    });
+  } catch (error) {
+    console.log("[GET_MY_COURSES_ERROR]", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+}
+
+async function completeProfile(req, res) {
+  try {
+    const { age, username, contactNumber } = req.body;
+    const userId = req.user._id;
+    const user = await Users.findByIdAndUpdate(userId, {
+      age,
+      username,
+      contactNumber,
+    });
+
+    if (user) {
+      user.isProfileComplete = true;
+      await user.save();
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Profile Completed",
+    });
+  } catch (error) {
+    console.log("[PROFILE_COMPLETION_ERROR]", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+}
+
+module.exports = {
+  completeProfile,
+  userProfileHandler,
+  getMyCourses,
+  fetchInstructors,
+  enrollFreeCourse,
+};

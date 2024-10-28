@@ -11,6 +11,11 @@ const courseSchema = new mongoose.Schema({
         default : false,
 
     },
+
+    verifiedByAdmin : {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "Admin",
+    },
     instructor: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Instructor",  

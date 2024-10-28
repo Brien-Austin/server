@@ -17,6 +17,10 @@ const instructorSchema = new mongoose.Schema({
         default : false,
 
       },
+      isAccountDeactivated : {
+        type : Boolean,
+        default : false
+      },
   
     password: {
       type: String,
