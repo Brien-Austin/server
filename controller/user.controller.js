@@ -110,12 +110,16 @@ async function getMyCourses(req, res) {
     const userId = req.user._id;
     const user = await Users.findById(userId).populate({
       path: "enrolledCourses.course",
-    });
+      populate : {
+        path : "chapters",
+        model :"Chapters"
+      }
+    })
 
     return res.status(200).json({
       success: true,
       message: "Courses fetched successfully",
-      courses: user.enrolledCourses,
+      data: user.enrolledCourses,
     });
   } catch (error) {
     console.log("[GET_MY_COURSES_ERROR]", error);
@@ -126,6 +130,8 @@ async function getMyCourses(req, res) {
   }
 }
 
+
+//profile completion
 async function completeProfile(req, res) {
   try {
     const { age, username, contactNumber } = req.body;
@@ -152,6 +158,36 @@ async function completeProfile(req, res) {
       message: "Internal Server Error",
     });
   }
+}
+
+//profile edit
+async function profileEdit(req,res){
+  try {
+    const { age, username, contactNumber } = req.body;
+    const userId = req.user._id;
+    const user = await Users.findByIdAndUpdate(userId, {
+      age,
+      username,
+      contactNumber,
+    });
+
+    if (user) {
+      user.isProfileComplete = true;
+      await user.save();
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Profile Completed",
+    });
+  } catch (error) {
+    console.log("[PROFILE_COMPLETION_ERROR]", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+
 }
 
 module.exports = {

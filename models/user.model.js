@@ -51,6 +51,12 @@ const userSchema = new mongoose.Schema(
         enrolledDate: {
           type: Date,
         },
+        completedChapters : [
+          {
+            type : mongoose.Schema.Types.ObjectId,
+            ref : "Chapters"
+          }
+        ]
       },
     ],
 
