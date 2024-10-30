@@ -1,7 +1,7 @@
 const User = require("../models/user.model");
 const { createAccount, loginUser } = require("../services/auth.service");
 const { compareValue, hashValue } = require("../utils/bcrypt");
-const { generateAcessToken, generateRefreshToken } = require("../utils/jwt");
+const { generateAcessToken, generateRefreshToken, createTokensForGoogleUser } = require("../utils/jwt");
 
 async function registerHandler(req, res) {
   const { email, password } = req.body;
@@ -83,5 +83,31 @@ async function signInHandler(req, res) {
   }
 }
 
+const googleAuthCallback = async (req, res) => {
+  try {
+    const { accessToken, refreshToken } = createTokensForGoogleUser(req.user);
+    
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: false,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 20 * 24 * 60 * 60 * 1000 
+    });
+    res.cookie('accessToken', accessToken, {
+      httpOnly: false,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000 
+    });
 
-module.exports = { registerHandler, signInHandler };
+    
+    res.redirect("http://localhost:5173");
+  } catch (error) {
+    console.log('[GOOGLE_OAUTH_ERROR]',error)
+    res.redirect(`${process.env.FRONTEND_URL}/auth/error`);
+  }
+};
+
+
+
+module.exports = { registerHandler, signInHandler , googleAuthCallback };

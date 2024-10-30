@@ -4,12 +4,15 @@ const { connectDB } = require("./config/db");
 const {Server} = require("socket.io")
 const cors = require("cors");
 const http = require("http");
+const session = require('express-session');
 const authRouter = require("./routes/auth.route");
 const userRouter = require("./routes/user.route");
 const adminRouter = require("./routes/admin.route");
 const instructorRouter = require("./routes/instructor.route");
 const errorHandler = require("./middlewares/errorHandler");
 const ErrorHandler = require("./utils/error");
+const passport = require("passport")
+require('./config/passport')
 const {
   verifyToken,
   verifyInstructorToken,
@@ -25,6 +28,16 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(cookieparser());
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'your-session-secret',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 24 * 60 * 60 * 1000 
+  }
+}));
+app.use(passport.initialize());
 
 const server = http.createServer(app);
 

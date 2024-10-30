@@ -29,6 +29,21 @@ async function generateRefreshToken(user) {
     }
   );
 }
+const createTokensForGoogleUser = (user) => {
+  const accessToken = jwt.sign(
+    { id: user._id, email: user.email },
+    process.env.ACCESS_TOKEN_SECRET,
+    { expiresIn: '7d' }
+  );
+  
+  const refreshToken = jwt.sign(
+    { id: user._id },
+    process.env.REFRESH_TOKEN_SECRET,
+    { expiresIn: '30d' }
+  );
+  
+  return { accessToken, refreshToken };
+};
 async function verifyToken(req, res, next) {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -37,6 +52,7 @@ async function verifyToken(req, res, next) {
       message: `No Token Found or Invalid Format`,
     });
   }
+ 
 
   const token = authHeader.split(" ")[1];
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, data) => {
@@ -332,6 +348,7 @@ module.exports = {
   refreshTokenHandler,
   instructorRefreshTokenHandler,
   generateInstructorToken,
+  createTokensForGoogleUser,
   verifyAdminToken,
   generateAcessToken,
   generateRefreshToken,
