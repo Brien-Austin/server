@@ -1,16 +1,16 @@
 const mongoose = require("mongoose");
 const messageSchema = new mongoose.Schema({
-    studentId : {
-        type : String,
-        required : true,
-        ref : 'Users'
-    },
+  studentId: {
+    type: String,
+    required: true,
+    ref: "Users",
+  },
 
-    instructorId : {
-        type : String,
-        required : true,
-        ref : 'Instructors'
-    },
+  instructorId: {
+    type: String,
+    required: true,
+    ref: "Instructors",
+  },
   sender: {
     type: String,
     required: true,
@@ -34,10 +34,6 @@ const messageSchema = new mongoose.Schema({
     default: false,
   },
 });
-
-
-
-
 
 const Messages =
   mongoose.model("Messages", messageSchema) || mongoose.models.Messages;

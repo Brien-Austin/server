@@ -11,7 +11,7 @@ const adminSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
- 
+
     contactNumber: {
       type: String,
     },
@@ -21,7 +21,7 @@ const adminSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 const Admin = mongoose.model("Admin", adminSchema) || mongoose.models.Admin;

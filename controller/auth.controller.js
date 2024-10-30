@@ -1,7 +1,11 @@
 const User = require("../models/user.model");
 const { createAccount, loginUser } = require("../services/auth.service");
 const { compareValue, hashValue } = require("../utils/bcrypt");
-const { generateAcessToken, generateRefreshToken, createTokensForGoogleUser } = require("../utils/jwt");
+const {
+  generateAcessToken,
+  generateRefreshToken,
+  createTokensForGoogleUser,
+} = require("../utils/jwt");
 
 async function registerHandler(req, res) {
   const { email, password } = req.body;
@@ -10,7 +14,7 @@ async function registerHandler(req, res) {
       message: "Email or Password is required",
     });
   }
-  
+
   try {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -19,7 +23,6 @@ async function registerHandler(req, res) {
         message: "User Already Registered",
       });
     }
-    
 
     const hashedPassword = await hashValue(password);
     const user = new User({
@@ -31,7 +34,6 @@ async function registerHandler(req, res) {
     return res.status(200).json({
       message: "User registered successfully",
     });
-    
   } catch (error) {
     console.log("[ERROR_CREATING_USER(CONTROLLER)]", error);
     return res.status(500).json({
@@ -67,14 +69,13 @@ async function signInHandler(req, res) {
 
     const accessToken = await generateAcessToken(user);
     const refreshToken = await generateRefreshToken(user);
-    
+
     return res.status(200).json({
       success: true,
       message: "User Logged In Successfully",
       accessToken: accessToken,
-      refreshToken: refreshToken
+      refreshToken: refreshToken,
     });
-    
   } catch (error) {
     console.log("[LOGIN_CONTROLLER_ERROR]:", error);
     return res.status(500).json({
@@ -86,28 +87,25 @@ async function signInHandler(req, res) {
 const googleAuthCallback = async (req, res) => {
   try {
     const { accessToken, refreshToken } = createTokensForGoogleUser(req.user);
-    
-    res.cookie('refreshToken', refreshToken, {
+
+    res.cookie("refreshToken", refreshToken, {
       httpOnly: false,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 20 * 24 * 60 * 60 * 1000 
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 20 * 24 * 60 * 60 * 1000,
     });
-    res.cookie('accessToken', accessToken, {
+    res.cookie("accessToken", accessToken, {
       httpOnly: false,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 7 * 24 * 60 * 60 * 1000 
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    
     res.redirect("http://localhost:5173");
   } catch (error) {
-    console.log('[GOOGLE_OAUTH_ERROR]',error)
+    console.log("[GOOGLE_OAUTH_ERROR]", error);
     res.redirect(`${process.env.FRONTEND_URL}/auth/error`);
   }
 };
 
-
-
-module.exports = { registerHandler, signInHandler , googleAuthCallback };
+module.exports = { registerHandler, signInHandler, googleAuthCallback };

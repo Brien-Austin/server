@@ -1,32 +1,29 @@
 const mongoose = require("mongoose");
 
-const optionSchema  = new mongoose.Schema({
-    text : {
-        type : String,
-        required : true
-    }
-})
+const optionSchema = new mongoose.Schema({
+  text: {
+    type: String,
+    required: true,
+  },
+});
 
 const questionSchema = new mongoose.Schema({
-
-    question : {
-        type : String,
-        required : true
-
-    },
-    options : [optionSchema],
-    answer : {
-        type : mongoose.Schema.Types.ObjectId,
-        required : false,
-        ref : 'Options'
-    }
-})
+  question: {
+    type: String,
+    required: true,
+  },
+  options: [optionSchema],
+  answer: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: false,
+    ref: "Options",
+  },
+});
 
 const chapterSchema = new mongoose.Schema({
-  index : {
-    type : Number,
-    unique : true,
-
+  index: {
+    type: Number,
+    unique: true,
   },
   title: {
     type: String,
@@ -34,38 +31,40 @@ const chapterSchema = new mongoose.Schema({
   },
   imageurl: {
     type: String,
-    required : false
+    required: false,
   },
   description: {
     type: String,
     required: true,
   },
-  courseId : {
-    type : mongoose.Schema.Types.ObjectId,
-    ref : 'Courses'
-
+  courseId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Courses",
   },
 
   videoUrl: {
     type: String,
   },
 
-  qa : [
+  qa: [
     {
-        type : mongoose.Schema.Types.ObjectId,
-        required : false,
-        ref : 'Questions'
-      }
-  ]
+      type: mongoose.Schema.Types.ObjectId,
+      required: false,
+      ref: "Questions",
+    },
+  ],
 });
 
+const Questions =
+  mongoose.model("Questions", questionSchema) || mongoose.models.Questions;
 
-const Questions = mongoose.model("Questions",questionSchema) || mongoose.models.Questions
-
-const Options = mongoose.model("Options",optionSchema) || mongoose.models.Options
+const Options =
+  mongoose.model("Options", optionSchema) || mongoose.models.Options;
 
 const Chapters =
   mongoose.model("Chapters", chapterSchema) || mongoose.models.Chapters;
 module.exports = {
-    Chapters,Questions,Options
+  Chapters,
+  Questions,
+  Options,
 };

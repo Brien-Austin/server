@@ -226,45 +226,42 @@ async function createMultipleChapters(req, res) {
 // create q and a
 async function createQuestionAnswers(req, res) {
   try {
-    const {question, options } = req.body;
-  const {chapterId,courseId} = req.params;
-  const userId = req.instructor.id
-  if(!chapterId || !courseId) {
-    return res.status(404).json({
-      success: false,
-      message : "CoureseId and ChapterId are required"
-    })
-  }
-
-  const chapter = await Chapters.findById(chapterId)
-  const qa = new Questions({
-    question ,
-    options ,
-    
-
-  })
-
-  chapter.qa.push(qa._id)
-  await qa.save()
-  await chapter.save()
-
-  return res.status(200).json({
-    success: true,
-    message : 'QA Created',
-    data : {
-      chapterId , userId , courseId
+    const { question, options } = req.body;
+    const { chapterId, courseId } = req.params;
+    const userId = req.instructor.id;
+    if (!chapterId || !courseId) {
+      return res.status(404).json({
+        success: false,
+        message: "CoureseId and ChapterId are required",
+      });
     }
-  })
-    
+
+    const chapter = await Chapters.findById(chapterId);
+    const qa = new Questions({
+      question,
+      options,
+    });
+
+    chapter.qa.push(qa._id);
+    await qa.save();
+    await chapter.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "QA Created",
+      data: {
+        chapterId,
+        userId,
+        courseId,
+      },
+    });
   } catch (error) {
-    console.log('[QA_CERATION_ERROR]', error);
+    console.log("[QA_CERATION_ERROR]", error);
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
-    })
-    
+    });
   }
-
 }
 // instructor profile
 async function instructorProfile(req, res) {
@@ -301,20 +298,18 @@ async function instructorProfile(req, res) {
 async function publishCourse(req, res) {
   try {
     const { courseId, instructorId } = req.params;
-    const currentCourse = await Courses.findById(courseId)
-    const currentStatus =  currentCourse.isPublished
+    const currentCourse = await Courses.findById(courseId);
+    const currentStatus = currentCourse.isPublished;
     const course = await Courses.findByIdAndUpdate(courseId, {
-      isPublished : !currentStatus
+      isPublished: !currentStatus,
     });
-    await course.save()
-    const message = currentStatus ? "Course published" : "Course unpublished !"
-  
+    await course.save();
+    const message = currentStatus ? "Course published" : "Course unpublished !";
 
     return res.status(200).json({
       success: true,
-      message: message
-    })
-    
+      message: message,
+    });
   } catch (error) {
     console.log("[PUBLISH_COURSE]", error);
     return res.status(500).json({
@@ -324,7 +319,7 @@ async function publishCourse(req, res) {
   }
 }
 
-// 
+//
 module.exports = {
   instructorRegisterHandler,
   InstructorSignInHandler,
@@ -332,5 +327,5 @@ module.exports = {
   createMultipleChapters,
   instructorProfile,
   publishCourse,
-  createQuestionAnswers
+  createQuestionAnswers,
 };

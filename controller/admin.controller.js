@@ -101,7 +101,7 @@ async function giveInstructorAccess(req, res) {
       },
       {
         new: true,
-      }
+      },
     );
 
     const instructorName = grantedAccessInstructor.email;
@@ -184,7 +184,7 @@ async function deactivateUser(req, res) {
 async function getInstructorData(req, res) {
   try {
     const instructors = await Instructor.find().select(
-      "email profileUrl contactNumber age username canCreateCourse "
+      "email profileUrl contactNumber age username canCreateCourse ",
     );
 
     return res.status(200).json({

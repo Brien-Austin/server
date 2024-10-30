@@ -3,7 +3,6 @@ const User = require("../models/user.model");
 const Instructor = require("../models/instructor.model");
 const { Admin } = require("../models/admin.model");
 
-
 //  User jwt handlers
 async function generateAcessToken(user) {
   return jwt.sign(
@@ -14,7 +13,7 @@ async function generateAcessToken(user) {
     process.env.ACCESS_TOKEN_SECRET,
     {
       expiresIn: "7d",
-    }
+    },
   );
 }
 async function generateRefreshToken(user) {
@@ -26,22 +25,22 @@ async function generateRefreshToken(user) {
     process.env.REFRESH_TOKEN_SECRET,
     {
       expiresIn: "30d",
-    }
+    },
   );
 }
 const createTokensForGoogleUser = (user) => {
   const accessToken = jwt.sign(
     { id: user._id, email: user.email },
     process.env.ACCESS_TOKEN_SECRET,
-    { expiresIn: '7d' }
+    { expiresIn: "7d" },
   );
-  
+
   const refreshToken = jwt.sign(
     { id: user._id },
     process.env.REFRESH_TOKEN_SECRET,
-    { expiresIn: '30d' }
+    { expiresIn: "30d" },
   );
-  
+
   return { accessToken, refreshToken };
 };
 async function verifyToken(req, res, next) {
@@ -52,7 +51,6 @@ async function verifyToken(req, res, next) {
       message: `No Token Found or Invalid Format`,
     });
   }
- 
 
   const token = authHeader.split(" ")[1];
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, data) => {
@@ -97,7 +95,7 @@ async function refreshTokenHandler(req, res) {
         const newAccessToken = jwt.sign(
           { id: user._id, email: user.email },
           process.env.ACCESS_TOKEN_SECRET,
-          { expiresIn: "15m" }
+          { expiresIn: "15m" },
         );
 
         res.cookie("accessToken", newAccessToken, {
@@ -114,12 +112,9 @@ async function refreshTokenHandler(req, res) {
           message: "Server Error",
         });
       }
-    }
+    },
   );
 }
-
-
-
 
 // Instructor jwt handlers
 async function generateInstructorAccesToken(instructor) {
@@ -131,7 +126,7 @@ async function generateInstructorAccesToken(instructor) {
     process.env.ACCESS_TOKEN_SECRET,
     {
       expiresIn: "7d",
-    }
+    },
   );
 }
 
@@ -188,7 +183,7 @@ async function instructorRefreshTokenHandler(req, res) {
         const newAccessToken = jwt.sign(
           { id: instructor._id, email: instructor.email },
           process.env.ACCESS_TOKEN_SECRET,
-          { expiresIn: "30d" }
+          { expiresIn: "30d" },
         );
 
         res.cookie("accessToken", newAccessToken, {
@@ -205,7 +200,7 @@ async function instructorRefreshTokenHandler(req, res) {
           message: "Server Error",
         });
       }
-    }
+    },
   );
 }
 
@@ -218,12 +213,9 @@ async function generateInstructorToken(instructor) {
     process.env.REFRESH_TOKEN_SECRET,
     {
       expiresIn: "30d",
-    }
+    },
   );
 }
-
-
-
 
 // Admin jwt handlers
 async function generateAdminAccessToken(admin) {
@@ -236,7 +228,7 @@ async function generateAdminAccessToken(admin) {
     process.env.ACCESS_TOKEN_SECRET,
     {
       expiresIn: "7d",
-    }
+    },
   );
 }
 
@@ -250,7 +242,7 @@ async function generateAdminRefreshToken(admin) {
     process.env.REFRESH_TOKEN_SECRET,
     {
       expiresIn: "30d",
-    }
+    },
   );
 }
 
@@ -273,7 +265,7 @@ async function verifyAdminToken(req, res, next) {
     }
 
     const admin = await Admin.findById(data.id);
-    if (!admin ) {
+    if (!admin) {
       return res.status(403).json({
         success: false,
         message: "Unauthorized Access, Admin Only",
@@ -321,7 +313,7 @@ async function adminRefreshTokenHandler(req, res) {
             role: admin.role,
           },
           process.env.ACCESS_TOKEN_SECRET,
-          { expiresIn: "15m" }
+          { expiresIn: "15m" },
         );
 
         res.cookie("accessToken", newAccessToken, {
@@ -338,11 +330,9 @@ async function adminRefreshTokenHandler(req, res) {
           message: "Server Error",
         });
       }
-    }
+    },
   );
 }
-
-
 
 module.exports = {
   refreshTokenHandler,

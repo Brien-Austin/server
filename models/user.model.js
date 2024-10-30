@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema(
     googleId: {
       type: String,
       unique: true,
-      sparse: true
+      sparse: true,
     },
     email: {
       type: String,
@@ -15,7 +15,6 @@ const userSchema = new mongoose.Schema(
 
     password: {
       type: String,
-      
     },
     role: {
       type: String,
@@ -56,30 +55,29 @@ const userSchema = new mongoose.Schema(
         enrolledDate: {
           type: Date,
         },
-        completedChapters : [
+        completedChapters: [
           {
-            type : mongoose.Schema.Types.ObjectId,
-            ref : "Chapters"
-          }
-        ]
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Chapters",
+          },
+        ],
       },
     ],
 
-    isAccountDeactivated : {
-      type : Boolean,
-      default : false,
-
+    isAccountDeactivated: {
+      type: Boolean,
+      default: false,
     },
-    messages : [
+    messages: [
       {
-        type : mongoose.Schema.Types.ObjectId,
-        ref : 'Messages'
-      }
-    ]
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Messages",
+      },
+    ],
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 const Users = mongoose.model("Users", userSchema) || mongoose.models.Users;

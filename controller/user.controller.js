@@ -74,7 +74,7 @@ async function enrollFreeCourse(req, res) {
 
     const userToBeEnrolled = await Users.findById(userId);
     const alreadyEnrolled = userToBeEnrolled.enrolledCourses.some(
-      (course) => String(course.course) === String(id)
+      (course) => String(course.course) === String(id),
     );
     if (alreadyEnrolled) {
       return res.status(400).json({
@@ -110,11 +110,11 @@ async function getMyCourses(req, res) {
     const userId = req.user._id;
     const user = await Users.findById(userId).populate({
       path: "enrolledCourses.course",
-      populate : {
-        path : "chapters",
-        model :"Chapters"
-      }
-    })
+      populate: {
+        path: "chapters",
+        model: "Chapters",
+      },
+    });
 
     return res.status(200).json({
       success: true,
@@ -129,7 +129,6 @@ async function getMyCourses(req, res) {
     });
   }
 }
-
 
 //profile completion
 async function completeProfile(req, res) {
@@ -161,7 +160,7 @@ async function completeProfile(req, res) {
 }
 
 //profile edit
-async function profileEdit(req,res){
+async function profileEdit(req, res) {
   try {
     const { age, username, contactNumber } = req.body;
     const userId = req.user._id;
@@ -187,7 +186,6 @@ async function profileEdit(req,res){
       message: "Internal Server Error",
     });
   }
-
 }
 
 module.exports = {
