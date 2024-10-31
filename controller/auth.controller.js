@@ -6,6 +6,8 @@ const {
   generateRefreshToken,
   createTokensForGoogleUser,
 } = require("../utils/jwt");
+const dotenv = require("dotenv")
+dotenv.config()
 
 async function registerHandler(req, res) {
   const { email, password } = req.body;
@@ -101,7 +103,7 @@ const googleAuthCallback = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    res.redirect("http://localhost:5173");
+    res.redirect(`${process.env.FRONTEND_URL}`);
   } catch (error) {
     console.log("[GOOGLE_OAUTH_ERROR]", error);
     res.redirect(`${process.env.FRONTEND_URL}/auth/error`);

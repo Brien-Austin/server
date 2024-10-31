@@ -42,7 +42,7 @@ passport.use(
           email: profile.emails[0].value,
           profileUrl: profile.photos[0].value,
 
-          password: Math.random().toString(36).slice(-8), // Random password for Google users
+          password: Math.random().toString(36).slice(-8), 
         });
 
         done(null, user);
