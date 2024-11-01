@@ -43,6 +43,14 @@ app.use(session({
     maxAge: 24 * 60 * 60 * 1000, // 1 day
   },
 }));
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", `${process.env.FRONTEND_URL}`); // Frontend origin
+  res.setHeader("Access-Control-Allow-Credentials", "true"); // Allows cookies
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS"); // Allowed methods
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization"); // Allowed headers
+  next();
+});
+
 
 app.use(passport.initialize());
 
