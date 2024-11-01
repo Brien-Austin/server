@@ -93,7 +93,7 @@ const googleAuthCallback = async (req, res) => {
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // true for production
-      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax", // None for cross-site cookies
+      sameSite: "None",
       maxAge: 20 * 24 * 60 * 60 * 1000, // 20 days
       path: '/'
     });
