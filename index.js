@@ -27,21 +27,23 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(cors({
-  origin: `${process.env.FRONTEND_URL}`, 
+  origin: process.env.FRONTEND_URL, 
   credentials: true, 
 }));
 app.use(cookieparser());
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET || "your-session-secret",
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 24 * 60 * 60 * 1000,
-    },
-  }),
-);
+
+app.use(session({
+  secret: process.env.SESSION_SECRET || "your-session-secret",
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === "production", // HTTPS in production
+    httpOnly: true, // Restrict cookie access to HTTP requests only
+    sameSite: "None", // Enables cross-site requests
+    maxAge: 24 * 60 * 60 * 1000, // 1 day
+  },
+}));
+
 app.use(passport.initialize());
 
 const server = http.createServer(app);
