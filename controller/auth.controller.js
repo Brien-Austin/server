@@ -91,19 +91,21 @@ const googleAuthCallback = async (req, res) => {
     const { accessToken, refreshToken } = createTokensForGoogleUser(req.user);
 
     res.cookie("refreshToken", refreshToken, {
-      httpOnly: false,
-      secure: true,
-      sameSite: "Lax",
-      maxAge: 20 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // true for production
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax", // None for cross-site cookies
+      maxAge: 20 * 24 * 60 * 60 * 1000, // 20 days
       path: '/'
     });
+    
     res.cookie("accessToken", accessToken, {
-      httpOnly: false,
-      secure: true,
-      sameSite: "Lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       path: '/'
     });
+    
 
     res.redirect(`${process.env.FRONTEND_URL}`);
   } catch (error) {
