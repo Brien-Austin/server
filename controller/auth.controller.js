@@ -95,15 +95,17 @@ const googleAuthCallback = async (req, res) => {
       secure: process.env.NODE_ENV === "production", // true for production
       sameSite: "None",
       maxAge: 20 * 24 * 60 * 60 * 1000, // 20 days
-      path: '/'
+      path: '/',
+      domain : process.env.FRONTEND_URL
     });
     
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       secure: true,
-      sameSite:"None",
+      sameSite : "None",
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-      path: '/'
+      path: '/',
+      domain : process.env.FRONTEND_URL
     });
     
 
