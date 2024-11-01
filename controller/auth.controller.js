@@ -90,26 +90,9 @@ const googleAuthCallback = async (req, res) => {
   try {
     const { accessToken, refreshToken } = createTokensForGoogleUser(req.user);
 
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // true for production
-      sameSite: "None",
-      maxAge: 20 * 24 * 60 * 60 * 1000, // 20 days
-      path: '/',
-      domain : process.env.FRONTEND_URL
-    });
-    
-    res.cookie("accessToken", accessToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite : "None",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-      path: '/',
-      domain : process.env.FRONTEND_URL
-    });
-    
+    const redirectUrl = `${process.env.FRONTEND_URL}?accessToken=${encodeURIComponent(accessToken)}&refreshToken=${encodeURIComponent(refreshToken)}`;
+    res.redirect(redirectUrl);
 
-    res.redirect(`${process.env.FRONTEND_URL}`);
   } catch (error) {
     console.log("[GOOGLE_OAUTH_ERROR]", error);
     res.redirect(`${process.env.FRONTEND_URL}/auth/error`);
