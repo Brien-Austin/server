@@ -45,7 +45,10 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: process.env.FRONTEND_URL, 
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
   },
 });
 
