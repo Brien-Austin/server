@@ -5,10 +5,7 @@ const Users = require("../models/user.model");
 async function 
 userProfileHandler(req, res, next) {
   try {
-    const user = await Users.findOne({ email: req.user.email }).populate({
-      path : 'users.courses.course',
-      
-    });
+    const user = await Users.findOne({ email: req.user.email })
     if (!user) {
       return res.status(404).json({
         success: false,
