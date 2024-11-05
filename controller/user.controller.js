@@ -58,6 +58,49 @@ async function fetchInstructors(req, res, next) {
   }
 }
 
+async function fetchEnrolledCourse(req,res){
+  try {
+    const {courseId} = req.params
+    const user = await Users.findOne({email : req.user.email , enrolledCourses : {
+      $elemMatch : {
+        course : courseId 
+      }
+    } }).populate({
+      path : "enrolledCourses.course",
+      populate : {  
+        path : "chapters"
+      }
+    })
+    
+
+    if(!user){
+      return res.status(404).json({
+        success: false,
+        message: "Course not found",
+      })
+    }
+
+    const specificCourse = user.enrolledCourses.find((e)=>e.course._id.toString() === courseId)
+    console.log(specificCourse)
+
+    return res.status(200).json({
+      success: true,
+      specificCourse
+      
+    })
+    
+
+    
+  } catch (error) {
+    console.log('[FETCH_ENROLLED_COURSE_BY_ID]',error)
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    })
+    
+  }
+}
+
 async function followInstructor(req, res) {}
 
 async function enrollFreeCourse(req, res) {
@@ -195,4 +238,5 @@ module.exports = {
   getMyCourses,
   fetchInstructors,
   enrollFreeCourse,
+  fetchEnrolledCourse
 };
