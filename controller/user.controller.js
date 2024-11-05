@@ -67,9 +67,15 @@ async function fetchEnrolledCourse(req,res){
       }
     } }).populate({
       path : "enrolledCourses.course",
-      populate : {  
-        path : "chapters"
-      }
+      populate :[
+        {  
+          path : "chapters"
+        },
+        {  
+          path : "instructor", 
+          select : "email profileUrl"
+        }
+      ]
     })
     
 
