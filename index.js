@@ -22,6 +22,8 @@ const cookieparser = require("cookie-parser");
 const upload = require("./config/upload");
 const { imageUploadHandler } = require("./controller/course.controller");
 
+
+
 dotenv.config();
 
 const app = express();
@@ -37,17 +39,19 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: process.env.NODE_ENV === "production", // HTTPS in production
-    httpOnly: true, // Restrict cookie access to HTTP requests only
-    sameSite: "None", // Enables cross-site requests
+    secure: process.env.NODE_ENV === "production", 
+    httpOnly: true, 
+    sameSite: "None", 
     maxAge: 24 * 60 * 60 * 1000, // 1 day
   },
 }));
+
+
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", `${process.env.FRONTEND_URL}`); // Frontend origin
-  res.setHeader("Access-Control-Allow-Credentials", "true"); // Allows cookies
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS"); // Allowed methods
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization"); // Allowed headers
+  res.setHeader("Access-Control-Allow-Origin", `${process.env.FRONTEND_URL}`); 
+  res.setHeader("Access-Control-Allow-Credentials", "true"); 
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS"); 
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization"); 
   next();
 });
 
@@ -96,6 +100,10 @@ app.use("/api/v1/instructor", verifyInstructorToken, instructorRouter);
 // image uploader
 
 app.post("/api/v1/admin/image", upload.single("file"), imageUploadHandler);
+
+
+// video uploader
+
 
 server.listen(process.env.PORT, () => {
   connectDB();

@@ -1,11 +1,12 @@
 const { upload } = require("../config/upload");
+const Category = require("../models/category.model");
 const Courses = require("../models/course.model");
 const Course = require("../models/course.model");
 const Instructor = require("../models/instructor.model");
 
 //course creation
 async function createCourseHandler(req, res) {
-  const { title, imageurl, description, tags } = req.body;
+  const { title, imageurl, description, tags , categoryId } = req.body;
   try {
     const instructor = await Instructor.findById(req.instructor._id);
     if (!instructor.canCreateCourse) {
@@ -23,6 +24,7 @@ async function createCourseHandler(req, res) {
       description,
       tags,
       instructor: req.instructor._id,
+      category : categoryId
     });
     instructor.courses.push(course._id);
     await instructor.save();
@@ -96,6 +98,29 @@ async function getCourseById(req, res) {
   }
 }
 
+
+async function createCategory(req,res){
+  try {
+    const {name , description} = req.body
+    const course  = await Category.create({
+      name ,
+      description
+    })
+    await course.save()
+    return res.status(201).json({
+      success: true,
+      message : "category created successfully"
+    })
+    
+  } catch (error) {
+    console.log('[CREATE_CATEGORY_ERROR]', error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    })
+    
+  }
+}
 async function imageUploadHandler(req, res) {
   if (!req.file) {
     return res.status(400).json({
@@ -115,4 +140,5 @@ module.exports = {
   imageUploadHandler,
   getCourses,
   getCourseById,
+  createCategory
 };

@@ -7,6 +7,10 @@ const userSchema = new mongoose.Schema(
       unique: true,
       sparse: true,
     },
+
+    passwordResetRequired : {
+      type : Boolean,
+    },
     email: {
       type: String,
       required: true,

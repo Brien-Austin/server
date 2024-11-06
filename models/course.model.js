@@ -31,6 +31,11 @@ const courseSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
   },
+  category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Category",
+    required: false,
+  },
 
   isYoutubeCourse: {
     type: Boolean,

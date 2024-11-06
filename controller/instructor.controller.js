@@ -177,7 +177,7 @@ async function createMultipleChapters(req, res) {
     const createdChapters = [];
 
     for (const chapterData of chapters) {
-      const { title, description, imageurl, videourl } = chapterData;
+      const { title, description, imageurl, videourl, index } = chapterData;
 
       if (!title || !description || !videourl) {
         await session.abortTransaction();
@@ -191,6 +191,7 @@ async function createMultipleChapters(req, res) {
 
       const newChapter = new Chapters({
         title,
+        index,  
         description,
         imageurl,
         videourl,

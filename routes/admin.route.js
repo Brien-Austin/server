@@ -16,6 +16,7 @@ const {
   verifyInstructorToken,
   verifyAdminToken,
 } = require("../utils/jwt");
+const { createCategory } = require("../controller/course.controller");
 
 const router = express.Router();
 
@@ -32,6 +33,9 @@ router.put("/instructor-access", verifyAdminToken, giveInstructorAccess);
 router.get("/all-users", getUsersData);
 router.put("/user/deactivate", deactivateUser);
 
+
+// create category 
+router.post("/create-category", createCategory)
 // delete a user
 router.delete("/delete/:userId", deleteUser);
 

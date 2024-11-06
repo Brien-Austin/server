@@ -41,9 +41,12 @@ passport.use(
           name: profile.displayName,
           email: profile.emails[0].value,
           profileUrl: profile.photos[0].value,
+          passwordResetRequired : true,
 
-          password: Math.random().toString(36).slice(-8), 
+          
         });
+
+        await user.save()
 
         done(null, user);
       } catch (error) {

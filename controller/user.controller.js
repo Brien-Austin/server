@@ -69,12 +69,13 @@ async function fetchEnrolledCourse(req,res){
       path : "enrolledCourses.course",
       populate :[
         {  
-          path : "chapters"
-        },
-        {  
           path : "instructor", 
           select : "email profileUrl"
-        }
+        }, 
+        {  
+          path : "chapters"
+        },
+     
       ]
     })
     
@@ -153,6 +154,45 @@ async function enrollFreeCourse(req, res) {
     });
   }
 }
+
+async function completeChapter(req,res){
+  try {
+
+    const {chapterId} = req.params
+    const userId = req.user.id
+    const user = await Users.findByIdAndUpdate(userId, {
+      enrolledCourses : {
+        completeChapter : [
+          chapterId
+        ]
+      }
+    })
+
+    if(!user){
+      return res.status(404).json({
+        success : false,
+        message : "User not found",
+      })
+    }
+
+    await user.save()
+
+    return res.status(200).json({
+      success : true,
+      message : "Chapter completed successfully",
+    })
+
+    
+    
+  } catch (error) {
+    console.log('[CHAPTER_COMPLETION_ERROR]',error);
+    return res.status(500).json({
+      success: false,
+      message : "Internal Server Error",
+    
+  })
+
+}}
 
 //my-courses
 async function getMyCourses(req, res) {
@@ -244,5 +284,6 @@ module.exports = {
   getMyCourses,
   fetchInstructors,
   enrollFreeCourse,
-  fetchEnrolledCourse
+  fetchEnrolledCourse,
+  completeChapter
 };
