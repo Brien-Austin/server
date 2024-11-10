@@ -194,10 +194,10 @@ async function createMultipleChapters(req, res) {
         index,  
         description,
         imageurl,
-        videourl,
+        videoUrl : videourl,
         courseId: courseId,
       });
-
+      createdChapters.push(newChapter);
       await newChapter.save({ session });
       course.chapters.push(newChapter._id);
     }

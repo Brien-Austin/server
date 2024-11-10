@@ -1,3 +1,4 @@
+const { Chapters } = require("../models/chapter.model");
 const Courses = require("../models/course.model");
 const Instructor = require("../models/instructor.model");
 const Users = require("../models/user.model");
@@ -10,6 +11,7 @@ userProfileHandler(req, res, next) {
       return res.status(404).json({
         success: false,
         message: "User not found",
+        email : req.user.email
       });
     }
 
@@ -158,24 +160,37 @@ async function enrollFreeCourse(req, res) {
 async function completeChapter(req,res){
   try {
 
-    const {chapterId} = req.params
+    const {chapterId , courseId} = req.params
     const userId = req.user.id
-    const user = await Users.findByIdAndUpdate(userId, {
-      enrolledCourses : {
-        completeChapter : [
-          chapterId
-        ]
-      }
-    })
+    const user = await Users.findById(userId)
+    const isAlreadyCompleted = user.enrolledCourses.completedChapter.find(
+      (chapter) => String(chapter) === String(chapterId),
+    );
 
-    if(!user){
+    if(isAlreadyCompleted) {
+      return res.staus(400).json({
+        success: false,
+        message : 'Chapter completed Already !!'
+      })
+    }
+    const updateChapterCompletedUser = await Users.findByIdAndUpdate(userId,{
+      $push : {
+        'enrolledCourses.0.completedChapters' :  chapterId
+      }
+
+    } , {
+      new : true
+    })
+    await updateChapterCompletedUser.save()
+
+    if(!updateChapterCompletedUser){
       return res.status(404).json({
         success : false,
         message : "User not found",
       })
     }
 
-    await user.save()
+    await updateChapterCompletedUser.save()
 
     return res.status(200).json({
       success : true,
@@ -278,8 +293,43 @@ async function profileEdit(req, res) {
   }
 }
 
+// reset password
+async function resetPassword(req, res) {
+  try {
+    
+  } catch (error) {
+    console.log("[PASSWORD_RESET_ERROR]", error);
+    
+  }
+}
+
+// find chapter by id
+
+async function findChapterById(req,res) {
+ try {
+  const {chapterId} = req.params;
+  const chapter = await Chapters.findById(chapterId);
+  return res.status(200).json({
+    success: true,
+    message: "Chapter fetched successfully",
+    chapter
+  })
+
+  
+ } catch (error) {
+  console.log("[CHAPTER_FETCH_ERROR]",error)
+  return res.staus(400).json({
+    success : false,
+    message : "Internal Server Error"
+  })
+  
+ }
+
+}
+
 module.exports = {
   completeProfile,
+findChapterById,
   userProfileHandler,
   getMyCourses,
   fetchInstructors,

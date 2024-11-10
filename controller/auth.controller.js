@@ -44,6 +44,37 @@ async function registerHandler(req, res) {
   }
 }
 
+
+async function createPasswordHandler(req, res) {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(400).json({
+      message: "Email or Password is required",
+    });
+  }
+
+  try {
+    
+    const hashedPassword = await hashValue(password);
+    const updatedUser = await User.findOneAndUpdate(
+      { email },
+      { password: hashedPassword },
+      { new: true }
+    );
+
+    await updatedUser.save();
+    return res.status(200).json({
+      message: "Password set successfully",
+    });
+  } catch (error) {
+    console.log("[ERROR_CREATING_PASSWORD(CONTROLLER)]", error);
+    return res.status(500).json({
+      message: "Internal Server Error",
+    });
+  }
+}
+
+
 async function signInHandler(req, res) {
   const { email, password } = req.body;
   if (!email || !password) {
@@ -99,4 +130,4 @@ const googleAuthCallback = async (req, res) => {
   }
 };
 
-module.exports = { registerHandler, signInHandler, googleAuthCallback };
+module.exports = { registerHandler,createPasswordHandler, signInHandler, googleAuthCallback };

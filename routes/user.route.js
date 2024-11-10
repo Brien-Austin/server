@@ -7,6 +7,7 @@ const {
   completeProfile,
   fetchEnrolledCourse,
   completeChapter,
+  findChapterById,
 } = require("../controller/user.controller");
 const { verifyToken } = require("../utils/jwt");
 const {
@@ -26,6 +27,9 @@ router.patch("/complete-profile", completeProfile);
 router.get("/my-course/:courseId",fetchEnrolledCourse)
 
 // chapter complete 
-router.post("/complete-chapter/:chapterId", completeChapter)
+router.post("/complete-chapter/:courseId/:chapterId", completeChapter)
+
+//find chap by id
+router.get("/chapter/:chapterId",findChapterById)
 
 module.exports = router;
