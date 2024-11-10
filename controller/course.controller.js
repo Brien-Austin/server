@@ -135,6 +135,24 @@ async function imageUploadHandler(req, res) {
   });
 }
 
+async function uploadNotes() {
+  
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "No file Uploaded !!!",
+      });
+    }
+  
+    const filePath = req.file.path;
+    res.json({
+      success : true,
+      message : "Document Uploaded !!!",
+      url: filePath,
+    });
+
+}
+
 module.exports = {
   createCourseHandler,
   imageUploadHandler,

@@ -70,6 +70,20 @@ const courseSchema = new mongoose.Schema({
   ],
 });
 
+const notesSchema = new mongoose.Schema({
+  name : {
+    type : String,
+    required : true
+  },
+
+  url : {
+    type : String,
+    required : true
+  }
+})
+
+const Notes = mongoose.model("Notes",notesSchema) || mongoose.models.Notes
+
 const Courses =
   mongoose.model("Courses", courseSchema) || mongoose.models.Courses;
-module.exports = Courses;
+module.exports = {Courses,Notes};

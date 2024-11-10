@@ -157,57 +157,83 @@ async function enrollFreeCourse(req, res) {
   }
 }
 
-async function completeChapter(req,res){
+async function completeChapter(req, res) {
   try {
+    const { chapterId, courseId } = req.params;
+    const userId = req.user.id;
 
-    const {chapterId , courseId} = req.params
-    const userId = req.user.id
-    const user = await Users.findById(userId)
-    const isAlreadyCompleted = user.enrolledCourses.completedChapter.find(
-      (chapter) => String(chapter) === String(chapterId),
+    // Find user
+    const user = await Users.findById(userId);
+    
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    // Find the specific enrolled course
+    const enrolledCourse = user.enrolledCourses.find(
+      enrollment => String(enrollment.course) === String(courseId)
     );
 
-    if(isAlreadyCompleted) {
-      return res.staus(400).json({
-        success: false,
-        message : 'Chapter completed Already !!'
-      })
-    }
-    const updateChapterCompletedUser = await Users.findByIdAndUpdate(userId,{
-      $push : {
-        'enrolledCourses.0.completedChapters' :  chapterId
-      }
-
-    } , {
-      new : true
-    })
-    await updateChapterCompletedUser.save()
-
-    if(!updateChapterCompletedUser){
+    if (!enrolledCourse) {
       return res.status(404).json({
-        success : false,
-        message : "User not found",
-      })
+        success: false,
+        message: "Course not found in user's enrolled courses",
+      });
     }
 
-    await updateChapterCompletedUser.save()
+    // Check if chapter is already completed
+    const isAlreadyCompleted = enrolledCourse.completedChapters.some(
+      chapter => String(chapter) === String(chapterId)
+    );
+
+    if (isAlreadyCompleted) {
+      return res.status(400).json({
+        success: false,
+        message: "Chapter already completed!",
+      });
+    }
+
+    // Update the user document with the completed chapter
+    const updatedUser = await Users.findOneAndUpdate(
+      { 
+        _id: userId,
+        "enrolledCourses.course": courseId 
+      },
+      { 
+        $addToSet: { 
+          "enrolledCourses.$.completedChapters": chapterId 
+        } 
+      },
+      { 
+        new: true 
+      }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({
+        success: false,
+        message: "Failed to update completion status",
+      });
+    }
 
     return res.status(200).json({
-      success : true,
-      message : "Chapter completed successfully",
-    })
+      success: true,
+      message: "Chapter completed successfully",
+    });
 
-    
-    
   } catch (error) {
-    console.log('[CHAPTER_COMPLETION_ERROR]',error);
+    console.log('[CHAPTER_COMPLETION_ERROR]', error);
     return res.status(500).json({
       success: false,
-      message : "Internal Server Error",
-    
-  })
+      message: "Internal Server Error",
+    });
+  }
+}
 
-}}
+
 
 //my-courses
 async function getMyCourses(req, res) {
@@ -231,6 +257,7 @@ async function getMyCourses(req, res) {
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
+      error : error?.message
     });
   }
 }
