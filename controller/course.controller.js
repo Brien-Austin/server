@@ -1,7 +1,7 @@
 const { upload } = require("../config/upload");
 const Category = require("../models/category.model");
-const Courses = require("../models/course.model");
-const Course = require("../models/course.model");
+const { Courses } = require("../models/course.model");
+
 const Instructor = require("../models/instructor.model");
 
 //course creation

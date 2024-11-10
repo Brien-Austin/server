@@ -1,7 +1,64 @@
+
+
+const { redisClient, connectRedisCache } = require("../config/redis-cache");
 const { Chapters } = require("../models/chapter.model");
-const Courses = require("../models/course.model");
+const { Courses } = require("../models/course.model");
+
 const Instructor = require("../models/instructor.model");
 const Users = require("../models/user.model");
+
+// async function 
+// userProfileHandler(req, res, next) {
+//   try {
+//     await connectRedisCache()
+//     const cacheKey = `user:profile:${req.user.email}`
+//     const cachedUser = await redisClient.get(cacheKey)
+//     if (cachedUser) {
+//       return res.status(200).json({
+//         success: true,
+//         message: "User profile",
+//         user: JSON.parse(cachedUser)
+//       });
+//     }
+//     const user = await Users.findOne({ email: req.user.email })
+//     if (!user) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "User not found",
+//         email : req.user.email
+//       });
+//     }
+    
+//     const userData = {
+//       username: user?.username,
+//       email: user?.email,
+//       age: user?.age,
+//       contactNumber: user?.contactNumber,
+//       profileUrl: user?.profileUrl,
+//       isProfileComplete: user?.isProfileComplete,
+//       courses: user?.enrolledCourses,
+    
+//     };
+//     await redisClient.setEx(cacheKey, 3600, JSON.stringify(userData));
+
+//     return res.status(200).json({
+//       success: true,
+//       message: "User profile",
+//       user: userData
+//     });
+//   } catch (error) {
+//     console.log('[USER_PROFILE_ERROR]', error);
+//     return res.status(500).json({
+//       success: false,
+//       message: "Internal Server Error",
+//     });
+//   }
+// }
+
+
+
+
+
 
 async function 
 userProfileHandler(req, res, next) {

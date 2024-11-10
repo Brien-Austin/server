@@ -5,6 +5,7 @@ const { Server } = require("socket.io");
 const cors = require("cors");
 const http = require("http");
 const session = require("express-session");
+const {createClient} = require("redis")
 const authRouter = require("./routes/auth.route");
 const userRouter = require("./routes/user.route");
 const adminRouter = require("./routes/admin.route");
@@ -21,10 +22,13 @@ const {
 const cookieparser = require("cookie-parser");
 const upload = require("./config/upload");
 const { imageUploadHandler } = require("./controller/course.controller");
+const { connectRedisCache } = require("./config/redis-cache");
 
 
 
 dotenv.config();
+
+
 
 const app = express();
 app.use(express.json());
@@ -105,7 +109,13 @@ app.post("/api/v1/admin/image", upload.single("file"), imageUploadHandler);
 // video uploader
 
 
-server.listen(process.env.PORT, () => {
+server.listen(process.env.PORT, async() => {
   connectDB();
   console.log(`Listening on ${process.env.PORT}`);
+  
+
+  
+  
 });
+
+

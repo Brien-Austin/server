@@ -1,4 +1,5 @@
-const User = require("../models/user.model");
+
+const Users = require("../models/user.model");
 const { createAccount, loginUser } = require("../services/auth.service");
 const { compareValue, hashValue } = require("../utils/bcrypt");
 const {
@@ -18,7 +19,7 @@ async function registerHandler(req, res) {
   }
 
   try {
-    const existingUser = await User.findOne({ email });
+    const existingUser = await Users.findOne({ email });
     if (existingUser) {
       return res.status(400).json({
         success: false,
@@ -56,7 +57,7 @@ async function createPasswordHandler(req, res) {
   try {
     
     const hashedPassword = await hashValue(password);
-    const updatedUser = await User.findOneAndUpdate(
+    const updatedUser = await Users.findOneAndUpdate(
       { email },
       { password: hashedPassword },
       { new: true }
