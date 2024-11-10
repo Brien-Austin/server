@@ -1,5 +1,6 @@
 const { Admin } = require("../models/admin.model");
-const Courses = require("../models/course.model");
+const { Courses } = require("../models/course.model");
+
 const Instructor = require("../models/instructor.model");
 const Users = require("../models/user.model");
 const { compareValue, hashValue } = require("../utils/bcrypt");
